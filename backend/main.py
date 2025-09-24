@@ -154,11 +154,19 @@ def get_float(float_id: int):
     cur = conn.cursor()
 
     query = """
-    SELECT profile_id AS float_id, lat, lon, time, pres, temp, psal, level
-    FROM argo_profiles
-    WHERE profile_id = %s
-    ORDER BY time DESC
-    """
+        SELECT profile_id AS float_id, lat, lon, time, pres, temp, psal, level
+        FROM argo_profiles
+        WHERE profile_id = %s
+        AND lat IS NOT NULL AND lat <> 'NaN'::float
+        AND lon IS NOT NULL AND lon <> 'NaN'::float
+        AND time IS NOT NULL
+        AND pres IS NOT NULL AND pres <> 'NaN'::float
+        AND temp IS NOT NULL AND temp <> 'NaN'::float
+        AND psal IS NOT NULL AND psal <> 'NaN'::float
+        AND level IS NOT NULL AND level <> 'NaN'::float
+        ORDER BY time DESC
+        """
+
     cur.execute(query, (float_id,))
     rows = cur.fetchall()
 
@@ -182,5 +190,4 @@ def get_float(float_id: int):
             }
             for r in rows
         ]
-
     }
