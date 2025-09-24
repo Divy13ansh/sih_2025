@@ -1,13 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
+import "./FloatDetails.css";
 
 export default function FloatDetails() {
   const { id } = useParams();
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch((process.env.REACT_APP_BACKEND || "http://localhost:8000") + `/floats/${id}`)
+    fetch((process.env.REACT_APP_BACKEND || "http://127.0.0.1:8000") + `/floats/${id}`)
       .then(r => r.json())
       .then(setData)
       .catch(() => setData(null));

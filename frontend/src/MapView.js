@@ -28,7 +28,7 @@ export default function MapView() {
   const [floats, setFloats] = useState([]);
 
   useEffect(() => {
-    fetch((process.env.REACT_APP_BACKEND || "http://localhost:8000") + "/floats")
+    fetch((process.env.REACT_APP_BACKEND || "http://127.0.0.1:8000") + "/floats")
       .then(r => r.json())
       .then(setFloats)
       .catch(() => setFloats([]));

@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MapView from "./MapView";
 import FloatDetails from "./FloatDetails";
+import "./App.css";
+
 
 export default function App() {
   return (
