@@ -63,6 +63,16 @@ export default function FloatDetails() {
         }}
       />
 
+    <button
+        onClick={() => {
+            const url = (process.env.REACT_APP_BACKEND || "http://localhost:8000") + `/floats/${id}/csv`;
+            window.open(url, "_blank");
+        }}
+        >
+        Download CSV
+    </button>
+
+
       <ul>
         {data.records.map((rec, idx) => (
           <li key={idx}>
