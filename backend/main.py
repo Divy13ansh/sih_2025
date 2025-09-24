@@ -9,6 +9,9 @@ from dotenv import load_dotenv
 from psycopg2.extras import RealDictCursor
 from fastapi.middleware.cors import CORSMiddleware
 import math
+from fastapi.responses import StreamingResponse
+import io
+import csv
 
 load_dotenv()
 
@@ -191,3 +194,43 @@ def get_float(float_id: int):
             for r in rows
         ]
     }
+
+@app.get("/floats/{float_id}/csv")
+def get_float_csv(float_id: int):
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    query = """
+        SELECT profile_id AS float_id, lat, lon, time, pres, temp, psal, level
+        FROM argo_profiles
+        WHERE profile_id = %s
+        AND lat IS NOT NULL AND lat <> 'NaN'::float
+        AND lon IS NOT NULL AND lon <> 'NaN'::float
+        AND time IS NOT NULL
+        AND pres IS NOT NULL AND pres <> 'NaN'::float
+        AND temp IS NOT NULL AND temp <> 'NaN'::float
+        AND psal IS NOT NULL AND psal <> 'NaN'::float
+        AND level IS NOT NULL AND level <> 'NaN'::float
+        ORDER BY time DESC
+        """
+
+    cur.execute(query, (float_id,))
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    if not rows:
+        raise HTTPException(404, "Float not found")
+
+    # Write CSV to memory
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=rows[0].keys())
+    writer.writeheader()
+    writer.writerows(rows)
+    output.seek(0)
+
+    return StreamingResponse(
+        output,
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=float_{float_id}.csv"}
+    )
