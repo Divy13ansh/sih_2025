@@ -43,3 +43,12 @@
 .leaflet-marker-icon:hover {
   transform: scale(1.2);
 }
+
+
+.ocean-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #004d80;
+  text-shadow: 1px 1px 3px white;
+  pointer-events: none; /* so clicks pass through */
+}
