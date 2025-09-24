@@ -1,0 +1,41 @@
+/* .app-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: sans-serif;
+  max-height: 100%;
+} */
+
+.chat-container {
+  margin-top: 20px;
+}
+
+.chat-box {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #f9f9f9;
+}
+
+.chat-entry {
+  margin-bottom: 10px;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.map {
+  flex: 1; /* let the map take remaining space */
+  height: 100%;
+}
