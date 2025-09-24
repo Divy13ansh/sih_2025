@@ -1,65 +1,165 @@
-/* Main container for the float details page */
-.float-details {
-  max-width: 900px;
-  margin: 2rem auto;
+/* --- 1. THEME & VARIABLES (Unchanged) --- */
+:root {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --color-primary: #0077b6;
+  --color-secondary: #00b4d8;
+  --color-accent: #ff8fab;
+  --color-bg-main: #f0f7ff;
+  --color-text-primary: #03045e;
+  --color-text-secondary: #4895ef;
+  --card-bg-color: #ffffff; /* UPDATED: Now a solid color */
+  --card-border-color: #eaf6ff;
+  --card-glow: 0 10px 30px rgba(72, 149, 239, 0.2);
+  --anim-duration: 0.6s;
+}
+
+/* --- 2. GLOBAL & STATIC BACKGROUND --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+body {
+  font-family: var(--font-sans);
+  /* OPTIMIZED: Replaced expensive animated gradient with a static one */
+  background-image: linear-gradient(180deg, #f0f7ff 0%, #d6eaff 100%);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* REMOVED: The expensive ::before pseudo-element for the animated background */
+
+/* --- 3. MAIN LAYOUT & LOAD-IN ANIMATIONS (Unchanged) --- */
+.float-details-container {
+  max-width: 1200px;
+  margin: 3rem auto;
   padding: 2rem;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #343a40;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
 }
 
-/* Heading for the float ID */
-.float-details h2 {
-  text-align: center;
-  color: #212529;
-  margin-bottom: 2rem;
-  font-size: 2.5em;
+@keyframes slideUpFadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.float-details-header, .details-card, .download-button-container {
+  animation: slideUpFadeIn var(--anim-duration) ease-out forwards;
+  opacity: 0;
+}
+
+.details-card:nth-of-type(1) { animation-delay: 0.2s; }
+.download-button-container { animation-delay: 0.3s; }
+.details-card:nth-of-type(2) { animation-delay: 0.4s; }
+
+/* --- 4. HEADER WITH GRADIENT TEXT (Unchanged) --- */
+.float-details-header h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- 5. OPTIMIZED CARD STYLE --- */
+.details-card {
+  background: var(--card-bg-color);
+  /* REMOVED: The very slow backdrop-filter property */
+  border: 1px solid var(--card-border-color);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* OPTIMIZATION: Hint to the browser to prepare for animation */
+  will-change: transform, box-shadow;
+}
+
+.details-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--card-glow);
+}
+
+.details-card h3 {
+  margin: -0.5rem 0 1.5rem 0;
+  font-size: 1.5rem;
   font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--card-border-color);
+  padding-bottom: 1rem;
 }
 
-/* Center the Plotly chart and add a subtle border */
-.js-plotly-plot {
-  margin: 0 auto 2.5rem auto; /* Center the plot and add margin below it */
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+/* --- 6. PLOTLY CHART CONTAINER (Unchanged) --- */
+.plot-container {
+  min-height: 550px; display: flex; align-items: center; justify-content: center;
 }
 
-/* Style for the list of records */
-.float-details ul {
-  list-style-type: none; /* Remove default bullet points */
-  padding: 0;
+/* --- 7. OPTIMIZED BUTTON --- */
+.download-button-container {
+  display: flex; justify-content: center;
 }
 
-/* Styling for each individual record (list item) */
-.float-details li {
-  background-color: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1rem; /* Space between list items */
-  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
-  line-height: 1.6;
+.download-button {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 119, 182, 0.2);
+  transition: all 0.2s ease-in-out;
+  will-change: transform, box-shadow; /* OPTIMIZATION */
 }
 
-/* Add a hover effect to lift the card slightly */
-.float-details li:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+.download-button:hover {
+  background-color: var(--color-secondary);
+  box-shadow: 0 7px 20px rgba(0, 180, 216, 0.3);
   transform: translateY(-3px);
 }
 
-/* Make the important data points stand out */
-.float-details li strong {
-  color: #007bff;
-  margin-right: 0.5rem;
-  font-weight: 500;
+/* --- 8. INTERACTIVE DATA LIST (Unchanged styling) --- */
+.records-list {
+list-style: none; padding: 0; margin: 0; max-height: 450px; overflow-y: auto;
 }
 
-/* Style for the "Loading..." message */
-.float-details p {
-  text-align: center;
-  font-size: 1.5rem;
-  color: #6c757d;
-  padding: 4rem 0;
+.records-list li {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--card-border-color);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem; position: relative;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.records-list li:last-child { border-bottom: none; }
+
+.records-list li::before {
+  content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%;
+  background: var(--color-secondary);
+  transform: scaleY(0); transition: transform 0.3s ease;
+  transform-origin: bottom;
+}
+
+.records-list li:hover {
+  transform: translateX(10px);
+  background-color: #fafdff;
+}
+
+.records-list li:hover::before { transform: scaleY(1); }
+.records-list li strong { color: var(--color-text-primary); font-weight: 600; }
+
+/* --- 9. CUSTOM SCROLLBAR & LOADING (Unchanged) --- */
+.records-list::-webkit-scrollbar { width: 8px; }
+.records-list::-webkit-scrollbar-track { background: transparent; }
+.records-list::-webkit-scrollbar-thumb { background-color: #d1e3f8; border-radius: 10px; }
+
+.loading-message {
+  text-align: center; font-size: 1.2rem;
+  color: var(--color-text-secondary); padding: 4rem 0;
+}
+
+/* --- 10. RESPONSIVE DESIGN (Unchanged) --- */
+@media (max-width: 768px) {
+  .float-details-container { padding: 1rem; margin: 1rem auto; }
+  .details-card { padding: 1.5rem; }
 }
